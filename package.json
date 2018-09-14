@@ -19,6 +19,8 @@
     "webpack-dev-server": "^2.9.4"
   },
   "dependencies": {
-    "ramda": "^0.25.0"
+    "lodash": "^4.17.5",
+    "ramda": "^0.25.0",
+    "url-parse": "^1.4.3"
   }
 }
