@@ -9,8 +9,8 @@
 const initModel = {
   command: '',
   face: '',
-  posx: '',
-  posy:'',
+  posx: null,
+  posy:null,
   movements: []
 }
 
