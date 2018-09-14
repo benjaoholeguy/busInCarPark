@@ -9,9 +9,16 @@
 const initModel = {
   command: '',
   face: '',
-  posx: null,
-  posy:null,
-  movements: []
+  posx: '',
+  posy:'',
+  movements: [],
+  carpark: [
+    {id: 1, cel1: '', cel2: '', cel3: '', cel4: '', cel5: ''},
+    {id: 2, cel1: '', cel2: '', cel3: '', cel4: '', cel5: ''},
+    {id: 3, cel1: '', cel2: '', cel3: '', cel4: '', cel5: ''},
+    {id: 4, cel1: '', cel2: '', cel3: '', cel4: '', cel5: ''},
+    {id: 5, cel1: '', cel2: '', cel3: '', cel4: '', cel5: ''}
+  ]
 }
 
 export default initModel;

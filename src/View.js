@@ -1,10 +1,11 @@
 import hh from 'hyperscript-helpers';
 import {h} from 'virtual-dom';
-
 import {
   commandInputMsg,
   saveCommandMsg
 } from './Update';
+
+import * as R from 'ramda';
 
 /* unpack pre function from hyperscript-helpers library
 * creates the pre tag useful for pre formating text
@@ -16,21 +17,31 @@ function cell(tag, className, value){
   return tag({className}, value)
 }
 
-function carparkRow(dispatch, className, command){
+function carparkRow(dispatch, className, carpark){
   return tr({ className }, [
-    cell(td, 'pa2', ''),
-    cell(td, 'pa2', ''),
-    cell(td, 'pa2', ''),
-    cell(td, 'pa2', ''),
-    cell(td, 'pa2', ''),
+    cell(td, 'pa2 ba w-10 h3 tc', carpark.cel1),
+    cell(td, 'pa2 ba w-10 h3 tc', carpark.cel2),
+    cell(td, 'pa2 ba w-10 h3 tc', carpark.cel3),
+    cell(td, 'pa2 ba w-10 h3 tc', carpark.cel4),
+    cell(td, 'pa2 ba w-10 h3 tc', carpark.cel5),
   ])
 }
 
-function tableView(dispatch, command){
+function carparkBody(dispatch, className, carpark){
+
+  const rows = R.map(
+    R.partial(carparkRow, [dispatch, '']),
+    carpark
+  )
+  return tbody({className}, rows);
+}
+
+function tableView(dispatch, carpark){
   return table({ className: 'mv2 w-100 collapse' }, [
-    carparkBody(dispatch, '', command),
+    carparkBody(dispatch, '', carpark),
   ])
 }
+
 
 //impure code below
 
@@ -84,7 +95,7 @@ function formView(dispatch, model) {
       className: 'w-100 mv2',
       onsubmit: e => {
         e.preventDefault();
-        dispatch(saveCommandMsg);
+        dispatch(saveCommandMsg(command));
       },
     },
     [
@@ -101,16 +112,15 @@ function formView(dispatch, model) {
 
 /**
  * The view function
- * @param {object} dispatch fn CarPark's config
- * @param {object} model current App model who potentialy could be changed based on the msg received
+ * @param {object} dispatch CarPark's config
+ * @param {object} model CarPark's config
  * @constructor
  */
 function view(dispatch, model){
   return div ({className: 'mw6 center '}, [
     h1({className: 'f2 pv2 bb'}, 'Bus in carpark simulator'),
     formView(dispatch, model),
-
-    // show the model on the page
+    tableView(dispatch, model.carpark),
     pre(JSON.stringify(model, null, 2)),
   ])
 }
