@@ -15,11 +15,11 @@ const initModel = {
   error: '',
   report: '',
   carpark: [
-    {id: 1, cel1: '', cel2: '', cel3: '', cel4: '', cel5: ''},
-    {id: 2, cel1: '', cel2: '', cel3: '', cel4: '', cel5: ''},
-    {id: 3, cel1: '', cel2: '', cel3: '', cel4: '', cel5: ''},
-    {id: 4, cel1: '', cel2: '', cel3: '', cel4: '', cel5: ''},
-    {id: 5, cel1: '', cel2: '', cel3: '', cel4: '', cel5: ''}
+    {col1: '', col2: '', col3: '', col4: '', col5: ''},
+    {col1: '', col2: '', col3: '', col4: '', col5: ''},
+    {col1: '', col2: '', col3: '', col4: '', col5: ''},
+    {col1: '', col2: '', col3: '', col4: '', col5: ''},
+    {col1: '', col2: '', col3: '', col4: '', col5: ''}
   ]
 }
 

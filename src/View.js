@@ -26,11 +26,11 @@ function cell(tag, className, value){
 
 function carparkRow(dispatch, className, carpark){
   return tr({ className }, [
-    cell(td, 'pa2 ba w-10 h3 tc', carpark.cel1),
-    cell(td, 'pa2 ba w-10 h3 tc', carpark.cel2),
-    cell(td, 'pa2 ba w-10 h3 tc', carpark.cel3),
-    cell(td, 'pa2 ba w-10 h3 tc', carpark.cel4),
-    cell(td, 'pa2 ba w-10 h3 tc', carpark.cel5),
+    cell(td, 'pa2 ba w-10 h3 tc', carpark.col1),
+    cell(td, 'pa2 ba w-10 h3 tc', carpark.col2),
+    cell(td, 'pa2 ba w-10 h3 tc', carpark.col3),
+    cell(td, 'pa2 ba w-10 h3 tc', carpark.col4),
+    cell(td, 'pa2 ba w-10 h3 tc', carpark.col5),
   ])
 }
 

@@ -40,17 +40,75 @@ export function saveParametersMsg(model, parameters){
     (0 <= posy && posy < 5) &&
     (1 <= face && face < 5)
     ){
-    return {
-      type: MSGS.SAVE_PARAMETERS,
-      posx,
-      posy,
-      face
-    }
+      // saveInCarpark(model, posx, posy);
+      // const {carpark}=model;
+      // console.log(carpark);
+      // let carpark = [
+      //   {col1: '', col2: '', col3: '', col4: '', col5: ''},
+      //   {col1: '', col2: '', col3: '', col4: '', col5: ''},
+      //   {col1: '', col2: '', col3: '', col4: '', col5: ''},
+      //   {col1: '', col2: '', col3: '', col4: '', col5: ''},
+      //   {col1: '', col2: '', col3: '', col4: '', col5: ''}
+      // ];
+      // carpark[posy].col1 = 'w';
+      return {
+        type: MSGS.SAVE_PARAMETERS,
+        posx,
+        posy,
+        face
+      }
   }else{
     return {
       type: MSGS.ERROR,
       error: 'Wrong params of Place command. Eg. Place 1 1 north'
     }
+  }
+
+}
+
+function matrix(posx, posy, face){
+  let carpark = [
+    {col1: '', col2: '', col3: '', col4: '', col5: ''},
+    {col1: '', col2: '', col3: '', col4: '', col5: ''},
+    {col1: '', col2: '', col3: '', col4: '', col5: ''},
+    {col1: '', col2: '', col3: '', col4: '', col5: ''},
+    {col1: '', col2: '', col3: '', col4: '', col5: ''}
+  ];
+  if (face === 1){
+    var car = '^';
+  }
+  if (face === 2){
+    var car = '>';
+  }
+  if (face === 3){
+    var car = 'v';
+  }
+  if (face === 4){
+    var car = '<';
+  }
+  switch (posx) {
+    case 0:
+      carpark[posy].col1 = car;
+      return carpark;
+      break;
+    case 1:
+      carpark[posy].col2 = car;
+      return carpark;
+      break;
+    case 2:
+      carpark[posy].col3 = car;
+      return carpark;
+      break;
+    case 3:
+      carpark[posy].col4 = car;
+      return carpark;
+      break;
+    case 4:
+      carpark[posy].col5 = car;
+      return carpark;
+      break;
+    default:
+
   }
 
 }
@@ -67,7 +125,6 @@ export const errorMsg = { type: MSGS.ERROR };
 
 
 export function leftMsg(model){
-  // if (model.command==='left'){
     const face = R.pipe(
       turnLeft,
     )(model.face);
@@ -76,7 +133,6 @@ export function leftMsg(model){
       face,
       command: ''
     }
-  // }
 }
 
 export function rightMsg(model){
@@ -102,15 +158,15 @@ export function reportMsg(model){
 
 export function moveMsg(model){
 
-  if (model.face===3 && model.posy < 4){
-    const posy = model.posy + 1;
+  if (model.face===3 && model.posy > 0){
+    const posy = model.posy - 1;
     return {
       type: MSGS.MOVE_SOUTH,
       posy,
       command: ''
     }
-  } else if (model.face===1 && model.posy > 0){
-    const posy = model.posy - 1;
+  } else if (model.face===1 && model.posy < 4){
+    const posy = model.posy + 1;
     return {
       type: MSGS.MOVE_NORTH,
       posy,
@@ -118,6 +174,7 @@ export function moveMsg(model){
     }
   } else if (model.face===2 && model.posx < 4){
     const posx = model.posx + 1;
+
     return {
       type: MSGS.MOVE_EAST,
       posx,
@@ -245,6 +302,7 @@ function update(msg, model){
 }
 
 
+
 function faceConvertToNumber(str){
   switch (str.toLowerCase()) {
     case 'north':
@@ -323,122 +381,5 @@ function turnRight(face){
 
   }
 }
-
-// function add(msg, model){
-//   const {command} = msg;
-//
-//   let words = command.split(' ');
-//   // let words = R.split(' ', words);
-//   switch (words[0].toLowerCase()) {
-//     case 'place':
-//       // console.log('place');
-//       if (words.length!==4){
-//         console.log('place command wrong parameters');
-//         break;
-//       } else {
-//         if ((0 <= words[1] && words[1] < 5) &&
-//         (0 <= words[2] && words[2] < 5) &&
-//         (words[3].toLowerCase() === 'north' || words[3].toLowerCase() === 'south'
-//         || words[3].toLowerCase() === 'east' || words[3].toLowerCase() === 'west')){
-//           // const posx = words[1] || model.posy;
-//           const posx = R.pipe(
-//             parseInt,
-//             R.defaultTo(0),
-//           )(words[1]);
-//           const posy = R.pipe(
-//             parseInt,
-//             R.defaultTo(0),
-//           )(words[2]);
-//           // const face = words[3];
-//           const face = R.pipe(
-//             faceConvertToNumber,
-//           )(words[3]);
-//           const movements = [...model, command];
-//           return {
-//             ...model,
-//             movements,
-//             posx,
-//             posy,
-//             face,
-//             command: ''
-//           }
-//         }else{
-//           console.log('Place. wrong command. Eg: Place 1 3 north');
-//         }
-//       }
-//       break;
-//     case 'move':
-//       console.log('move');
-//       // south
-//       if (model.face===3 && model.posy < 4){
-//         const posy = model.posy + 1;
-//         return {
-//           ...model,
-//           posy,
-//           command: ''
-//         }
-//       }
-//       // north
-//       if (model.face===1 && model.posy > 0){
-//         const posy = model.posy - 1;
-//         return {
-//           ...model,
-//           posy,
-//           command: ''
-//         }
-//       }
-//       // west
-//       if (model.face===2 && model.posx < 4){
-//         const posx = model.posx + 1;
-//         return {
-//           ...model,
-//           posx,
-//           command: ''
-//         }
-//       }
-//       // east
-//       if (model.face===4 && model.posx > 0){
-//         const posx = model.posx - 1;
-//         return {
-//           ...model,
-//           posx,
-//           command: ''
-//         }
-//       }
-//       break;
-//     case 'left':
-//       console.log('left');
-//       if (model.command==='left'){
-//         const face = R.pipe(
-//           turnLeft,
-//         )(model.face);
-//         return {
-//           ...model,
-//           face,
-//           command: ''
-//         }
-//       }
-//       break;
-//     case 'right':
-//       console.log('right');
-//       if (model.command==='right'){
-//         const face = R.pipe(
-//           turnRight,
-//         )(model.face);
-//         return {
-//           ...model,
-//           face,
-//           command: ''
-//         }
-//       }
-//       break;
-//     default:
-//       console.log('wrong command');
-//       break;
-//
-//   }
-//
-//   return model;
-// }
 
 export default update;
