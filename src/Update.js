@@ -40,21 +40,12 @@ export function saveParametersMsg(model, parameters){
     (0 <= posy && posy < 5) &&
     (1 <= face && face < 5)
     ){
-      // saveInCarpark(model, posx, posy);
-      // const {carpark}=model;
-      // console.log(carpark);
-      // let carpark = [
-      //   {col1: '', col2: '', col3: '', col4: '', col5: ''},
-      //   {col1: '', col2: '', col3: '', col4: '', col5: ''},
-      //   {col1: '', col2: '', col3: '', col4: '', col5: ''},
-      //   {col1: '', col2: '', col3: '', col4: '', col5: ''},
-      //   {col1: '', col2: '', col3: '', col4: '', col5: ''}
-      // ];
-      // carpark[posy].col1 = 'w';
+      const carpark = matrix(posx, posy, model.face);
       return {
         type: MSGS.SAVE_PARAMETERS,
         posx,
         posy,
+        carpark,
         face
       }
   }else{
@@ -67,7 +58,7 @@ export function saveParametersMsg(model, parameters){
 }
 
 function matrix(posx, posy, face){
-  let carpark = [
+  var carpark = [
     {col1: '', col2: '', col3: '', col4: '', col5: ''},
     {col1: '', col2: '', col3: '', col4: '', col5: ''},
     {col1: '', col2: '', col3: '', col4: '', col5: ''},
@@ -88,23 +79,23 @@ function matrix(posx, posy, face){
   }
   switch (posx) {
     case 0:
-      carpark[posy].col1 = car;
+      carpark[4-posy].col1 = 'x';
       return carpark;
       break;
     case 1:
-      carpark[posy].col2 = car;
+      carpark[4-posy].col2 = 'x';
       return carpark;
       break;
     case 2:
-      carpark[posy].col3 = car;
+      carpark[4-posy].col3 = 'x';
       return carpark;
       break;
     case 3:
-      carpark[posy].col4 = car;
+      carpark[4-posy].col4 = 'x';
       return carpark;
       break;
     case 4:
-      carpark[posy].col5 = car;
+      carpark[4-posy].col5 = 'x';
       return carpark;
       break;
     default:
@@ -125,6 +116,11 @@ export const errorMsg = { type: MSGS.ERROR };
 
 
 export function leftMsg(model){
+    if (model.face === ""){
+      return {
+        type: MSGS.ERROR,
+      }
+    }
     const face = R.pipe(
       turnLeft,
     )(model.face);
@@ -136,7 +132,11 @@ export function leftMsg(model){
 }
 
 export function rightMsg(model){
-  if (model.command==='right'){
+    if (model.face === ""){
+      return {
+        type: MSGS.ERROR,
+      }
+    }
     const face = R.pipe(
       turnRight,
     )(model.face);
@@ -145,10 +145,14 @@ export function rightMsg(model){
       face,
       command: ''
     }
-  }
 }
 
 export function reportMsg(model){
+  if (model.face === ""){
+    return {
+      type: MSGS.ERROR,
+    }
+  }
   const report = model.posx + ' ' + model.posy + ' ' + numberConvertToFace(model.face)
   return {
     type: MSGS.REPORT,
@@ -157,40 +161,46 @@ export function reportMsg(model){
 }
 
 export function moveMsg(model){
-
   if (model.face===3 && model.posy > 0){
     const posy = model.posy - 1;
+    const carpark = matrix(model.posx, posy, model.face);
     return {
       type: MSGS.MOVE_SOUTH,
+      carpark,
       posy,
       command: ''
     }
   } else if (model.face===1 && model.posy < 4){
     const posy = model.posy + 1;
+    const carpark = matrix(model.posx, posy, model.face);
     return {
       type: MSGS.MOVE_NORTH,
+      carpark,
       posy,
       command: ''
     }
   } else if (model.face===2 && model.posx < 4){
     const posx = model.posx + 1;
+    const carpark = matrix(posx, model.posy, model.face);
 
     return {
       type: MSGS.MOVE_EAST,
+      carpark,
       posx,
       command: ''
     }
   } else if (model.face===4 && model.posx > 0){
     const posx = model.posx - 1;
+    const carpark = matrix(posx, model.posy, model.face);
     return {
       type: MSGS.MOVE_WEST,
+      carpark,
       posx,
       command: ''
     }
   } else{
       return {
         type: MSGS.ERROR,
-        error: 'Cant move outside the carpark'
       }
     }
 
@@ -206,7 +216,6 @@ export const saveCommandMsg = { type: MSGS.SAVE_COMMAND };
  * @param {object} model current App model who potentialy could be changed based on the msg received
  */
 function update(msg, model){
-  console.log(msg.type);
   switch (msg.type) {
     case MSGS.COMMAND_INPUT: {
       const {command} = msg;
@@ -222,43 +231,48 @@ function update(msg, model){
       }
     }
     case MSGS.SAVE_PARAMETERS: {
-      const {posx, posy, face} = msg;
+      const {posx, posy, face, carpark} = msg;
       return {
         ...model,
         posx,
         posy,
         face,
+        carpark,
         command: ''
       };
     }
     case MSGS.MOVE_NORTH: {
-      const {posy} = msg;
+      const {posy, carpark} = msg;
       return {
         ...model,
+        carpark,
         posy,
         command: ''
       };
     }
     case MSGS.MOVE_SOUTH: {
-      const {posy} = msg;
+      const {posy, carpark} = msg;
       return {
         ...model,
+        carpark,
         posy,
         command: ''
       };
     }
     case MSGS.MOVE_WEST: {
-      const {posx} = msg;
+      const {posx, carpark} = msg;
       return {
         ...model,
+        carpark,
         posx,
         command: ''
       };
     }
     case MSGS.MOVE_EAST: {
-      const {posx} = msg;
+      const {posx, carpark} = msg;
       return {
         ...model,
+        carpark,
         posx,
         command: ''
       }
