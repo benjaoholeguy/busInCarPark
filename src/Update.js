@@ -40,7 +40,8 @@ export function saveParametersMsg(model, parameters){
     (0 <= posy && posy < 5) &&
     (1 <= face && face < 5)
     ){
-      const carpark = matrix(posx, posy, model.face);
+      const symbol = retSymbol(face);
+      const carpark = matrix(posx, posy, model.face, symbol);
       return {
         type: MSGS.SAVE_PARAMETERS,
         posx,
@@ -57,7 +58,14 @@ export function saveParametersMsg(model, parameters){
 
 }
 
-function matrix(posx, posy, face){
+function retSymbol(face){
+  if (face === 1) {return '^'};
+  if (face === 2) {return '>'};
+  if (face === 3) {return 'v'};
+  if (face === 4) {return '<'};
+}
+
+function matrix(posx, posy, face, symbol){
   var carpark = [
     {col1: '', col2: '', col3: '', col4: '', col5: ''},
     {col1: '', col2: '', col3: '', col4: '', col5: ''},
@@ -65,37 +73,27 @@ function matrix(posx, posy, face){
     {col1: '', col2: '', col3: '', col4: '', col5: ''},
     {col1: '', col2: '', col3: '', col4: '', col5: ''}
   ];
-  if (face === 1){
-    var car = '^';
-  }
-  if (face === 2){
-    var car = '>';
-  }
-  if (face === 3){
-    var car = 'v';
-  }
-  if (face === 4){
-    var car = '<';
-  }
+
+
   switch (posx) {
     case 0:
-      carpark[4-posy].col1 = 'x';
+      carpark[4-posy].col1 = symbol;
       return carpark;
       break;
     case 1:
-      carpark[4-posy].col2 = 'x';
+      carpark[4-posy].col2 = symbol;
       return carpark;
       break;
     case 2:
-      carpark[4-posy].col3 = 'x';
+      carpark[4-posy].col3 = symbol;
       return carpark;
       break;
     case 3:
-      carpark[4-posy].col4 = 'x';
+      carpark[4-posy].col4 = symbol;
       return carpark;
       break;
     case 4:
-      carpark[4-posy].col5 = 'x';
+      carpark[4-posy].col5 = symbol;
       return carpark;
       break;
     default:
@@ -124,8 +122,11 @@ export function leftMsg(model){
     const face = R.pipe(
       turnLeft,
     )(model.face);
+    const symbol = retSymbol(face);
+    const carpark = matrix(model.posx, model.posy, face, symbol);
     return {
       type: MSGS.TURN_LEFT,
+      carpark,
       face,
       command: ''
     }
@@ -140,8 +141,11 @@ export function rightMsg(model){
     const face = R.pipe(
       turnRight,
     )(model.face);
+    const symbol = retSymbol(face);
+    const carpark = matrix(model.posx, model.posy, face, symbol);
     return {
       type: MSGS.TURN_RIGHT,
+      carpark,
       face,
       command: ''
     }
@@ -162,8 +166,9 @@ export function reportMsg(model){
 
 export function moveMsg(model){
   if (model.face===3 && model.posy > 0){
+    const symbol = 'v';
     const posy = model.posy - 1;
-    const carpark = matrix(model.posx, posy, model.face);
+    const carpark = matrix(model.posx, posy, model.face, symbol);
     return {
       type: MSGS.MOVE_SOUTH,
       carpark,
@@ -171,8 +176,9 @@ export function moveMsg(model){
       command: ''
     }
   } else if (model.face===1 && model.posy < 4){
+    const symbol = '^';
     const posy = model.posy + 1;
-    const carpark = matrix(model.posx, posy, model.face);
+    const carpark = matrix(model.posx, posy, model.face, symbol);
     return {
       type: MSGS.MOVE_NORTH,
       carpark,
@@ -180,8 +186,9 @@ export function moveMsg(model){
       command: ''
     }
   } else if (model.face===2 && model.posx < 4){
+    const symbol = '>';
     const posx = model.posx + 1;
-    const carpark = matrix(posx, model.posy, model.face);
+    const carpark = matrix(posx, model.posy, model.face, symbol);
 
     return {
       type: MSGS.MOVE_EAST,
@@ -190,8 +197,9 @@ export function moveMsg(model){
       command: ''
     }
   } else if (model.face===4 && model.posx > 0){
+    const symbol = '<';
     const posx = model.posx - 1;
-    const carpark = matrix(posx, model.posy, model.face);
+    const carpark = matrix(posx, model.posy, model.face, symbol);
     return {
       type: MSGS.MOVE_WEST,
       carpark,
@@ -278,17 +286,19 @@ function update(msg, model){
       }
     };
     case MSGS.TURN_LEFT: {
-      const {face} = msg;
+      const {face, carpark} = msg;
       return {
         ...model,
+        carpark,
         face,
         command: ''
       }
     };
     case MSGS.TURN_RIGHT: {
-      const {face} = msg;
+      const {face, carpark} = msg;
       return {
         ...model,
+        carpark,
         face,
         command: ''
       }
