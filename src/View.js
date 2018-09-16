@@ -105,12 +105,16 @@ function formView(dispatch, model) {
           dispatch(saveCommandMsg);
           dispatch(saveParametersMsg(model, command.trim().split(/(?:\s+|,\s*)/i).slice(1)));
         } else if (command.match(/^move\s*$/i)) {
+          dispatch(saveCommandMsg);
           dispatch(moveMsg(model));
         } else if (command.match(/^left\s*$/i)) {
+          dispatch(saveCommandMsg);
           dispatch(leftMsg(model));
         } else if (command.match(/^right\s*$/i)) {
+          dispatch(saveCommandMsg);
           dispatch(rightMsg(model));
         } else if (command.match(/^report\s*$/i)) {
+          dispatch(saveCommandMsg);
           dispatch(reportMsg(model));
         } else {
           dispatch(errorMsg);
@@ -124,9 +128,7 @@ function formView(dispatch, model) {
       buttonSet(dispatch),
     ]
   )
-  // return button({className: 'f3 pv2 ph3 bg-blue white bn'},
-  //   'Run',
-  // );
+
 }
 
 /**
@@ -146,7 +148,7 @@ function view(dispatch, model){
       div({className: 'mw6 center dark-red'}, [pre(model.error)]),
       div({className: 'mw6 center'}, [pre(model.report)]),
       tableView(dispatch, model.carpark),
-      pre(JSON.stringify(model, null, 2))
+      // pre(JSON.stringify(model, null, 2))
     ])
   ])
 }

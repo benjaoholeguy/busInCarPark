@@ -22,7 +22,6 @@ const MSGS = {
  * @param {object} model current App model who potentialy could be changed based on the msg received
  */
 export function saveParametersMsg(model, parameters){
-  // console.log(parameters);
   const posx = R.pipe(
     parseInt,
     R.defaultTo(0),
@@ -215,7 +214,6 @@ export function moveMsg(model){
 }
 
 export const saveCommandMsg = { type: MSGS.SAVE_COMMAND };
-
 
 /**
  * Update function
